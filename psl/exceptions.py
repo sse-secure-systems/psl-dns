@@ -1,0 +1,2 @@
+class UnsupportedRule(Exception):
+    pass
