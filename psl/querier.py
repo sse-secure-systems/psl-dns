@@ -59,14 +59,8 @@ class PSL(PSLBase):
 
         return public_suffix
 
-    def is_public_suffix(self, domain, raise_exception=True):
-        try:
-            public_suffix = self.get_public_suffix(domain)
-        except UnsupportedRule:
-            if not raise_exception:
-                return False
-            raise
-
+    def is_public_suffix(self, domain, public_suffix=None):
+        public_suffix = public_suffix or self.get_public_suffix(domain)
         return (domain.count('.') == public_suffix.count('.'))
 
     def query(self, domain, rdatatype):
