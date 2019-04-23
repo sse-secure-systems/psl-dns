@@ -63,9 +63,9 @@ class PSL(PSLBase):
         # are given as TXT records.
         rrset = self.query(domain, dns.rdatatype.TXT)
         if rrset:
-            rules.extend([item.to_text().strip('"') for item in rrset])
+            rules.extend([item.to_text()[1:-1] for item in rrset])
 
-        return rules
+        return {str(rule.encode('utf-8'), 'idna') for rule in rules}
 
     def is_public_suffix(self, domain, public_suffix=None):
         public_suffix = public_suffix or self.get_public_suffix(domain)
