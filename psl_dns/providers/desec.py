@@ -1,4 +1,4 @@
-from psl.parser import Parser as AbstractParser
+from psl_dns.parser import Parser as AbstractParser
 
 TTL = 86400
 ZONE = '_psl.desec.io'

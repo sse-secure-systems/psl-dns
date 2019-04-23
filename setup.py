@@ -5,7 +5,7 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
     name="psl-dns",
-    version="1.0b2",
+    version="1.0b3",
     author="Peter Thomassen",
     author_email="mail@peter-thomassen.de",
     description="Query the Public Suffix List (PSL) via DNS and check the PSL status of a domain.",
@@ -22,9 +22,9 @@ setuptools.setup(
         "Topic :: Internet :: Name Service (DNS)",
     ],
     entry_points = {
-        'console_scripts': ['psl-dns_check=psl.commands.check:main',
-                            'psl-dns_parse=psl.commands.parse:main',
-                            'psl-dns_query=psl.commands.query:main',],
+        'console_scripts': ['psl-dns_check=psl_dns.commands.check:main',
+                            'psl-dns_parse=psl_dns.commands.parse:main',
+                            'psl-dns_query=psl_dns.commands.query:main',],
     }
 )
 

@@ -1,8 +1,8 @@
 import hashlib
 import logging
 
-from psl.parser import PSLReader
-from psl import PSL
+from psl_dns.parser import PSLReader
+from psl_dns import PSL
 
 
 class Checker(PSLReader):

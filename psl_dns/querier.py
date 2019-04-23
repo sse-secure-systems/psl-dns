@@ -3,9 +3,9 @@ import dns.rdataclass
 import dns.rdatatype
 import dns.query
 
-from psl.base import PSLBase
-from psl.exceptions import UnsupportedRule
-from psl.providers import DefaultProvider
+from psl_dns.base import PSLBase
+from psl_dns.exceptions import UnsupportedRule
+from psl_dns.providers import DefaultProvider
 
 
 class PSL(PSLBase):

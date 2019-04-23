@@ -1,8 +1,8 @@
 import argparse
 import codecs
 
-from psl import Checker
-from psl.providers import DefaultProvider
+from psl_dns import Checker
+from psl_dns.providers import DefaultProvider
 
 
 def main():

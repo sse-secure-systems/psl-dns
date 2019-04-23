@@ -3,7 +3,7 @@ import hashlib
 import json
 import time
 
-from psl.base import PSLBase
+from psl_dns.base import PSLBase
 
 
 class VarietyClass:

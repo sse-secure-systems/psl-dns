@@ -3,10 +3,10 @@ import codecs
 import sys
 import textwrap
 
-from psl import PSL
-from psl.exceptions import UnsupportedRule
-from psl.providers import DefaultProvider
-from psl.utils import CustomFormatter
+from psl_dns import PSL
+from psl_dns.exceptions import UnsupportedRule
+from psl_dns.providers import DefaultProvider
+from psl_dns.utils import CustomFormatter
 
 
 def main():

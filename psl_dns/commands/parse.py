@@ -3,9 +3,9 @@ import codecs
 import json
 import textwrap
 
-from psl import Parser
-from psl.providers import DefaultProvider
-from psl.utils import CustomFormatter
+from psl_dns import Parser
+from psl_dns.providers import DefaultProvider
+from psl_dns.utils import CustomFormatter
 
 EXTRA_RULES = ['*.wildcard.test', 'inline.*.wildcard.test',
                '*.inline.*.wildcard.test',

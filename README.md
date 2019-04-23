@@ -40,7 +40,7 @@ in the scripts under `psl/commands/`.
 
 #### Initialize
 ```python
->>> from psl import PSL
+>>> from psl_dns import PSL
 >>> psl = PSL(resolver='8.8.8.8')
 ```
 
