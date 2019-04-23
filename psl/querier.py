@@ -9,13 +9,21 @@ from psl.providers import DefaultProvider
 
 
 class PSL(PSLBase):
-    ptr_cache = {}
+    _cache = {}
 
     def __init__(self, resolver, zone=DefaultProvider.ZONE, timeout=5, *args, **kwargs):
         self.resolver = resolver
         self.timeout = timeout
         self.zone = zone.rstrip('.') + '.'
         super().__init__(*args, **kwargs)
+
+    def _retrieve(self, qname, rdatatype):
+        key = (qname, rdatatype)
+        if not self._cache.get(key):
+            self.logger.info('Querying for {} {}'.format(qname, dns.rdatatype.to_text(rdatatype)))
+            query = dns.message.make_query(qname, rdatatype)
+            self._cache[key] = dns.query.tcp(query, self.resolver, timeout=self.timeout)
+        return self._cache[key]
 
     def get_checksum(self):
         rrset = self.query('', dns.rdatatype.TXT)
@@ -24,54 +32,50 @@ class PSL(PSLBase):
 
         return rrset.items[0].to_text().strip('"').split(' ')[1]
 
-    def get_rules(self, domain):
-        # For wildcard exceptions and unsupported inline wildcards, the rules
-        # are given as TXT records. Otherwise, it's just the public suffix.
-        # TODO This probably can be optimzed by factor ~2 using ANY QTYPE.
-        rrset = self.query(domain, dns.rdatatype.TXT)
-        if rrset:
-            rules = [item.to_text().strip('"') for item in rrset]
-        else:
-            rules = [self.get_public_suffix(domain).rstrip('.')]
-
-        return {str(rule.encode('utf-8'), 'idna') for rule in rules}
-
     def get_public_suffix(self, domain):
-        if not domain.rstrip('.'):
+        if domain[0] == '.':
             raise ValueError('Invalid domain name')
 
-        # Query DNS if necessary
-        if domain not in self.ptr_cache:
-            self.ptr_cache[domain] = self.query(domain, dns.rdatatype.PTR)
-        else:
-            self.logger.debug('Using PTR cache for {}'.format(domain))
-
         # Retrieve RRset
-        rrset = self.ptr_cache[domain]
+        rrset = self.query(domain, dns.rdatatype.PTR)
+
+        # '.' is a dummy value for the unsupported case. It corresponds to the
+        # empty rule and therefore cannot appear on the PSL.
         if rrset is None:
             msg = 'Domain {} is affected by an unsupported rule'.format(domain)
             raise UnsupportedRule(msg)
+        public_suffix = rrset.items[0].to_text()
 
         # Extract
-        public_suffix = rrset.items[0].to_text()
         if domain[-1] != '.':
             public_suffix = public_suffix[:-1]
 
         return public_suffix
+
+    def get_rules(self, domain):
+        # The public suffix itself is always a rule
+        try:
+            rules = [self.get_public_suffix(domain).rstrip('.')]
+        except UnsupportedRule:
+            rules = []
+
+        # For wildcard exceptions and unsupported inline wildcards, additional rules
+        # are given as TXT records.
+        rrset = self.query(domain, dns.rdatatype.TXT)
+        if rrset:
+            rules.extend([item.to_text().strip('"') for item in rrset])
+
+        return rules
 
     def is_public_suffix(self, domain, public_suffix=None):
         public_suffix = public_suffix or self.get_public_suffix(domain)
         return (domain.count('.') == public_suffix.count('.'))
 
     def query(self, domain, rdatatype):
-        # Construct and normalize QNAME
+        # Normalize, then construct QNAME, and retrieve response
         qname = '.'.join([domain.rstrip('.'), self.zone]).lstrip('.')
         qname = dns.name.from_text(qname)
-        self.logger.info('Querying for {} {}'.format(qname, dns.rdatatype.to_text(rdatatype)))
-
-        # Query PSL
-        query = dns.message.make_query(qname, rdatatype)
-        r = dns.query.tcp(query, self.resolver, timeout=self.timeout)
+        r = self._retrieve(qname, rdatatype)
 
         # Follow CNAMEs
         while True:

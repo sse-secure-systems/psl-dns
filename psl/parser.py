@@ -190,7 +190,7 @@ class Parser(VarietyClass, PSLReader):
                 rules.append(self.rrsets[wildcard][0]['records'][0][:-1])
             rules = ['"{}"'.format(rule) for rule in rules]
 
-            # Set RRset (replaces PTR RRset if present)
+            # Set TXT RRset with applicable rules (replaces PTR)
             self._update_rrsets(wildcard, [('TXT', rules)])
 
     def _process_regular_rules(self):
@@ -226,8 +226,8 @@ class Parser(VarietyClass, PSLReader):
                 if '*.{}'.format(parent) in self.rrsets:
                     parent = '*.{}'.format(parent)
 
-            # Create exception pointer and document applicable rules for reference
-            rules = [wildcard, '!{}'.format(rule), parent]
+            # Create pointer to parent and document other relevant rules via TXT
+            rules = [wildcard, '!{}'.format(rule)]
             self._update_rrsets(rule, [('PTR', parent),
                                        ('TXT', ['"{}"'.format(x) for x in rules])])
 
