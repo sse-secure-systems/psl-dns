@@ -76,6 +76,17 @@ False
 'jp'
 ```
 
+If the queried domain has a trailing dot, the dot is preserved in the
+response. Furthermore, IDDA mode is preserved so that Unicode queries
+return Unicode responses, and Punycode queries return Punycode responses:
+
+```python
+>>> psl.get_public_suffix('www.xn--55qx5d.cn')
+'xn--55qx5d.cn'
+>>> psl.get_public_suffix('www.公司.cn.')
+'公司.cn.'
+```
+
 #### Get the set of rules applicable for a domain
 ```python
 >>> psl.get_rules('com')
@@ -90,6 +101,14 @@ False
 {'jp', '!city.kawasaki.jp', '*.kawasaki.jp'}
 >>> psl.get_rules('www.library.city.kawasaki.jp') # same
 {'jp', '!city.kawasaki.jp', '*.kawasaki.jp'}
+```
+
+Rules are always returned in Unicode encoding and without a trailing
+dot, consistent with the encoding in the Public Suffix List itself:
+
+```python
+>>> psl.get_rules('www.xn--55qx5d.cn.')
+{'公司.cn'}
 ```
 
 #### Rules with inline wildcards

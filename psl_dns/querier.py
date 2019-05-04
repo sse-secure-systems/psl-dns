@@ -36,6 +36,8 @@ class PSL(PSLBase):
         if domain[0] == '.':
             raise ValueError('Invalid domain name')
 
+        punycode = (domain == domain.encode('idna').decode('ascii'))
+
         # Retrieve RRset
         rrset = self.query(domain, dns.rdatatype.PTR)
 
@@ -50,7 +52,7 @@ class PSL(PSLBase):
         if domain[-1] != '.':
             public_suffix = public_suffix[:-1]
 
-        return public_suffix
+        return public_suffix if punycode else public_suffix.encode('ascii').decode('idna')
 
     def get_rules(self, domain):
         # The public suffix itself is always a rule
@@ -59,13 +61,16 @@ class PSL(PSLBase):
         except UnsupportedRule:
             rules = []
 
+        punycode = (domain == domain.encode('idna').decode('ascii'))
+
         # For wildcard exceptions and unsupported inline wildcards, additional rules
         # are given as TXT records.
         rrset = self.query(domain, dns.rdatatype.TXT)
         if rrset:
             rules.extend([item.to_text()[1:-1] for item in rrset])
 
-        return {str(rule.encode('utf-8'), 'idna') for rule in rules}
+        print([rule for rule in rules])
+        return {str(rule.encode('utf-8'), 'idna') if punycode else rule for rule in rules}
 
     def is_public_suffix(self, domain, public_suffix=None):
         public_suffix = public_suffix or self.get_public_suffix(domain)
