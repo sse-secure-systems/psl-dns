@@ -5,7 +5,7 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
     name="psl-dns",
-    version="1.0rc1",
+    version="1.0rc2",
     author="Peter Thomassen",
     author_email="mail@peter-thomassen.de",
     description="Query the Public Suffix List (PSL) via DNS and check the PSL status of a domain.",

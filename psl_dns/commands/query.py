@@ -13,13 +13,13 @@ def main():
     description = '''
         Query the PSL via DNS and check the PSL status of a domain.
 
-        Returns the the word "public" or "private", followed by the entry
-        in the Public Suffix List (PSL) that covers the queried domain.
-        IDNA mode and trailing dots (if given) are preserved.
+        Returns the the word "public" or "private", followed by the public
+        suffix that covers the queried domain. IDNA mode and trailing dots
+        (if given) are preserved.
 
-        PSL rules with inline wildcards are not fully supported. If the
-        queried name is governed by such a rule, the word "unknown" is
-        returned.
+        Public Suffix List (PSL) rules with inline wildcards are not fully
+        supported. If the queried name is governed by such a rule, the word
+        "unknown" is returned.
 
         Optionally, the set of applicable rules and the PSL checksum can be
         displayed.

@@ -66,13 +66,19 @@ False
 'com'
 >>> psl.get_public_suffix('checkip.dedyn.io')
 'dedyn.io'
->>> psl.get_public_suffix('takatsu.kawasaki.jp')
-'*.kawasaki.jp'
->>> psl.get_public_suffix('www.ikuoufukushi.takatsu.kawasaki.jp')
-'*.kawasaki.jp'
->>> psl.get_public_suffix('city.kawasaki.jp') # Wildcard exception
+```
+
+The following examples are based on PSL wildcard rules. Wildcard labels
+are expanded into the respective labels of the domain of interest:
+
+```python
+>>> psl.get_public_suffix('takatsu.kawasaki.jp')  # Wildcard *.kawasaki.jp
+'takatsu.kawasaki.jp'
+>>> psl.get_public_suffix('www.ikuoufukushi.takatsu.kawasaki.jp')  # same
+'takatsu.kawasaki.jp'
+>>> psl.get_public_suffix('city.kawasaki.jp')  # Wildcard exception
 'jp'
->>> psl.get_public_suffix('www.library.city.kawasaki.jp') # same
+>>> psl.get_public_suffix('www.library.city.kawasaki.jp')  # same
 'jp'
 ```
 
@@ -171,9 +177,12 @@ usage: psl-dns_query [-h] [--zone ZONE] [--resolver RESOLVER]
 Query the PSL via DNS and check the PSL status of a domain.
 
 Returns the the word "public" or "private", followed by the public
-suffix that covers the queried domain. Public Suffix List (PSL) rules
-with inline wildcards are not fully supported. If the queried name is
-governed by such a rule, the word "unknown" is returned.
+suffix that covers the queried domain. IDNA mode and trailing dots
+(if given) are preserved.
+
+Public Suffix List (PSL) rules with inline wildcards are not fully
+supported. If the queried name is governed by such a rule, the word
+"unknown" is returned.
 
 Optionally, the set of applicable rules and the PSL checksum can be
 displayed.
