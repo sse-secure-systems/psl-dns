@@ -29,7 +29,7 @@ def main():
     parser = argparse.ArgumentParser(description=textwrap.dedent(description), formatter_class=CustomFormatter)
     parser.add_argument('domain', help='Domain to query', type=str)
     parser.add_argument('--zone', default=DefaultProvider.ZONE, help='PSL zone to use', type=str)
-    parser.add_argument('--resolver', default='8.8.8.8', help='DNS resolver to use', type=str)
+    parser.add_argument('--resolver', default=None, help='DNS resolver to use instead of system resolver', type=str)
     parser.add_argument('--timeout',  default=5, help='DNS query timeout (seconds)', type=int)
     parser.add_argument("-l", action='store_true', help="Show set of applicable rules")
     parser.add_argument("-c", action='store_true', help="Show PSL checksum")

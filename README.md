@@ -41,7 +41,7 @@ in the scripts under `psl/commands/`.
 #### Initialize
 ```python
 >>> from psl_dns import PSL
->>> psl = PSL(resolver='8.8.8.8')
+>>> psl = PSL()
 ```
 
 #### Query public suffix status of a domain (for the rules, see below)
@@ -195,7 +195,8 @@ positional arguments:
 optional arguments:
   -h, --help           show this help message and exit
   --zone ZONE          PSL zone to use (default: _psl.desec.io)
-  --resolver RESOLVER  DNS resolver to use (default: 8.8.8.8)
+  --resolver RESOLVER  DNS resolver to use instead of system resolver
+                       (default: None)
   --timeout TIMEOUT    DNS query timeout (seconds) (default: 5)
   -l                   Show set of applicable rules (default: False)
   -c                   Show PSL checksum (default: False)
@@ -278,7 +279,8 @@ positional arguments:
 
 optional arguments:
   -h, --help           show this help message and exit
-  --resolver RESOLVER  DNS resolver to use (default: 8.8.8.8)
+  --resolver RESOLVER  DNS resolver to use instead of system resolver
+                       (default: None)
   --timeout TIMEOUT    DNS query timeout (in seconds) (default: 5)
   --zone ZONE          PSL zone to use (default: _psl.desec.io)
   -v, --verbose        Increase output verbosity (default: 0)
