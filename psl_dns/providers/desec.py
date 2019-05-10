@@ -3,6 +3,7 @@ from psl_dns.parser import Parser as AbstractParser
 TTL = 86400
 ZONE = '_psl.desec.io'
 
+
 class Parser(AbstractParser):
     variety = 'deSEC'
 
@@ -28,5 +29,6 @@ class Parser(AbstractParser):
             self._process()
 
         return [rrset for rrset_list in self.rrsets.values() for rrset in rrset_list]
+
 
 Parser.register()

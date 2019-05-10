@@ -7,9 +7,12 @@ from psl_dns import Parser
 from psl_dns.providers import DefaultProvider
 from psl_dns.utils import CustomFormatter
 
-EXTRA_RULES = ['*.wildcard.test', 'inline.*.wildcard.test',
-               '*.inline.*.wildcard.test',
-               '!except.inline.*.wildcard.test',]
+EXTRA_RULES = [
+    '*.wildcard.test',
+    'inline.*.wildcard.test',
+    '*.inline.*.wildcard.test',
+    '!except.inline.*.wildcard.test',
+]
 
 
 def main():
@@ -29,7 +32,7 @@ def main():
     if args.l:
         print('Available output formats (default *):')
         for variety in Parser.get_varieties():
-            bullet = '*' if variety == DEFAULT_VARIETY else '-'
+            bullet = '*' if variety == DefaultProvider.Parser.variety else '-'
             print('{} {}'.format(bullet, variety))
         return
 

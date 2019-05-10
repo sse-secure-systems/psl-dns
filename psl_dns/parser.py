@@ -1,6 +1,5 @@
 from collections import defaultdict
 import hashlib
-import json
 import time
 
 from psl_dns.base import PSLBase
@@ -35,7 +34,8 @@ class PSLReader(PSLBase):
     def get_checksum(self):
         return self.m.hexdigest()
 
-    def get_rule_from_line(self, line):
+    @staticmethod
+    def get_rule_from_line(line):
         candidate = line.strip()
         if not candidate or candidate.startswith('//'):
             return None
@@ -47,6 +47,9 @@ class PSLReader(PSLBase):
         while line:
             self.process_line(line)
             line = stream_reader.readline()
+
+    def process_line(self, line):
+        raise NotImplementedError
 
     def update_hash(self, string):
         self.m.update(bytearray(string, 'utf8'))

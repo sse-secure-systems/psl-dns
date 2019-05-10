@@ -53,8 +53,8 @@ class TestMisc(TestBase):
 
 class TestGetPublicSuffix(TestBase):
     def assertGetPublicSuffix(self, domain, suffix):
-        mock = (suffix.rstrip('.') + '.').encode('idna').decode('ascii')
-        with self.get_mock_context_manager(mock):
+        mock_answer = (suffix.rstrip('.') + '.').encode('idna').decode('ascii')
+        with self.get_mock_context_manager(mock_answer):
             self.assertEqual(self.psl.get_public_suffix(domain), suffix)
             self.mock_resolver.query.assert_called()
 
@@ -93,8 +93,8 @@ class TestGetPublicSuffix(TestBase):
 
 class TestIsPublicSuffix(TestBase):
     def assertIsPublicSuffix(self, domain, suffix, value):
-        mock = (suffix.rstrip('.') + '.').encode('idna').decode('ascii')
-        with self.get_mock_context_manager(mock):
+        mock_answer = (suffix.rstrip('.') + '.').encode('idna').decode('ascii')
+        with self.get_mock_context_manager(mock_answer):
             self.assertEqual(self.psl.is_public_suffix(domain), value)
             self.mock_resolver.query.assert_called()
 

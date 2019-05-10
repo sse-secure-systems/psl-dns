@@ -1,4 +1,3 @@
-import hashlib
 import logging
 
 from psl_dns.parser import PSLReader
