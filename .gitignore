@@ -7,3 +7,5 @@ build
 
 *.sh
 config
+.idea/
+venv/
