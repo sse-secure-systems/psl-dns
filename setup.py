@@ -11,7 +11,7 @@ setuptools.setup(
     description="Query the Public Suffix List (PSL) via DNS and check the PSL status of a domain.",
     long_description=long_description,
     long_description_content_type="text/markdown",
-    url="https://github.com/peterthomassen/psl-dns",
+    url="https://github.com/sse-secure-systems/psl-dns",
     packages=setuptools.find_packages(),
     install_requires=['dnspython>=1.14.0'],
     classifiers=[
