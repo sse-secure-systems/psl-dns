@@ -1,11 +1,11 @@
 from psl_dns.parser import Parser as AbstractParser
 
 TTL = 86400
-ZONE = '_psl.desec.io'
+ZONE = 'query.publicsuffix.zone'
 
 
 class Parser(AbstractParser):
-    variety = 'deSEC'
+    variety = 'deSEC'  # https://desec.io/
 
     def __init__(self, *args, **kwargs):
         self.ttl = kwargs.pop('ttl', TTL)

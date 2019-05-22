@@ -10,9 +10,10 @@ use of the library from the shell.
 Public suffix information is based on DNS lookups only; no rule
 matching is performed at lookup time. To make this possible, the PSL
 rules have been encoded in the DNS itself (currently under the
-DNSSEC-enabled zone `_psl.desec.io`). This facilitates easy querying
-without the need to keep the PSL at hand. The PSL zone is usually
-updated once a day.
+DNSSEC-enabled zone `query.publicsuffix.zone`). This facilitates easy
+querying without the need to keep the PSL at hand. The PSL zone is
+maintained by [SSE](https://securesystems.de/) and usually updated once
+a day.
 
 The `Parser` class (along with the `psl-dns_parse` command) is used to
 iterate over a [PSL file](https://publicsuffix.org/list/public_suffix_list.dat)
@@ -194,7 +195,7 @@ positional arguments:
 
 optional arguments:
   -h, --help           show this help message and exit
-  --zone ZONE          PSL zone to use (default: _psl.desec.io)
+  --zone ZONE          PSL zone to use (default: query.publicsuffix.zone)
   --resolver RESOLVER  DNS resolver to use instead of system resolver
                        (default: None)
   --timeout TIMEOUT    DNS query timeout (seconds) (default: 5)
@@ -229,7 +230,7 @@ positional arguments:
 
 optional arguments:
   -h, --help       show this help message and exit
-  --zone ZONE      PSL zone to use (default: _psl.desec.io)
+  --zone ZONE      PSL zone to use (default: query.publicsuffix.zone)
   --format FORMAT  Output format to use (default: deSEC)
   -l               List available formats (default: False)
   -v, --verbose    Increase output verbosity (default: 0)
@@ -282,7 +283,7 @@ optional arguments:
   --resolver RESOLVER  DNS resolver to use instead of system resolver
                        (default: None)
   --timeout TIMEOUT    DNS query timeout (in seconds) (default: 5)
-  --zone ZONE          PSL zone to use (default: _psl.desec.io)
+  --zone ZONE          PSL zone to use (default: query.publicsuffix.zone)
   -v, --verbose        Increase output verbosity (default: 0)
 ```
 
@@ -290,9 +291,9 @@ optional arguments:
 ```sh
 $ time psl-dns_check -v <(curl https://publicsuffix.org/list/public_suffix_list.dat)
 ... # shortened for readability
-INFO:psl:Querying for zone.id._psl.desec.io. TXT
-INFO:psl:Querying for zone.id._psl.desec.io. PTR
-INFO:psl:Querying for _psl.desec.io. TXT
+INFO:psl:Querying for zone.id.query.publicsuffix.zone. TXT
+INFO:psl:Querying for zone.id.query.publicsuffix.zone. PTR
+INFO:psl:Querying for query.publicsuffix.zone. TXT
 WARNING:psl:Hash mismatch! Input PSL file appears to differ from remote version.
 8684 rules with 3 inconsistencies found
 
