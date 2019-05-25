@@ -1,7 +1,7 @@
 # DNS-based Public Suffix List handling for Python
 
-This Python package provides a `PSL` class for querying the [Public
-Suffix List (PSL)](https://publicsuffix.org/) via the DNS. By utilizing
+This Python package provides a `PSL` class for [querying the Public
+Suffix List (PSL)](https://publicsuffix.zone/) via the DNS. By utilizing
 the library, one can retrieve information about the public suffix
 status of a domain as well as the PSL rules governing it. There is also
 a corresponding command-line tool, `psl-dns_query`, enabling convenient
@@ -29,6 +29,11 @@ agreement with the file. (Note that DNS caching may cause update
 delays; after a zone update, you may be receiving outdated information
 until the TTL of the PSL DNS records expires. To make sure, specify one
 of the PSL zone's authoritative servers as the `resolver` argument.)
+
+**Note:** DNS resolvers learn about the domains that get queried, so
+depending on the use case, using this service may not be up to your
+privacy standards. It is possible though to set up a private copy of
+the query zone and configure a local resolver to avoid query leaks.
 
 ## Usage
 
