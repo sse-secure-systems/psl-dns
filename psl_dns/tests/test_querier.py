@@ -64,6 +64,10 @@ class TestGetPublicSuffix(TestBase):
         self.assertGetPublicSuffix('desec.io', 'io')
         self.assertGetPublicSuffix('desec.io.', 'io.')
 
+        # Also test lettercase normalization
+        self.assertGetPublicSuffix('IO', 'io')
+        self.assertGetPublicSuffix('s3.AmazonAWS.com', 's3.amazonaws.com')
+
     def test_punycode(self):
         self.assertGetPublicSuffix('www.xn--tsting-wxa.de.co.uk', 'co.uk')
 

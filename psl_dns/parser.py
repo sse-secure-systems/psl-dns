@@ -40,7 +40,7 @@ class PSLReader(PSLBase):
         if not candidate or candidate.startswith('//'):
             return None
 
-        return candidate
+        return candidate.lower()
 
     def process(self, stream_reader):
         line = stream_reader.readline()

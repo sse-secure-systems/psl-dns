@@ -51,6 +51,7 @@ class PSL(PSLBase):
         public_labels.reverse()
 
         for i, domain_label, public_label in zip(range(len(public_labels)), domain_labels, public_labels):
+            domain_label = domain_label.lower()
             if public_label == '*':
                 public_labels[i] = domain_label
             elif public_label != domain_label.encode('idna').decode('ascii'):
@@ -86,7 +87,7 @@ class PSL(PSLBase):
 
     def query(self, domain, rdatatype):
         # Normalize, then construct QNAME, and retrieve response
-        qname = '.'.join([domain.rstrip('.'), self.zone]).lstrip('.')
+        qname = '.'.join([domain.lower().rstrip('.'), self.zone]).lstrip('.')
         qname = dns.name.from_text(qname)
         self.logger.info('Querying for {} {}'.format(qname, dns.rdatatype.to_text(rdatatype)))
         try:
