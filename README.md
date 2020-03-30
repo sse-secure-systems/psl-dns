@@ -50,6 +50,9 @@ in the scripts under `psl/commands/`.
 >>> psl = PSL()
 ```
 
+If your system resolver does not support `PTR` records, you can set
+another resolver during initialization: `PSL(resolver='...')`
+
 #### Query public suffix status of a domain (for the rules, see below)
 ```python
 >>> psl.is_public_suffix('com')
