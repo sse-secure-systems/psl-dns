@@ -83,7 +83,7 @@ class PSL(PSLBase):
 
     def is_public_suffix(self, domain, public_suffix=None):
         public_suffix = public_suffix or self.get_public_suffix(domain)
-        return domain.count('.') == public_suffix.count('.')
+        return domain == public_suffix
 
     def query(self, domain, rdatatype):
         # Normalize, then construct QNAME, and retrieve response
