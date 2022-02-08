@@ -60,7 +60,6 @@ class Parser(VarietyClass, PSLReader):
     regular_rules = []
     wildcard_exception_rules = []
     proper_wildcard_rules = []
-    inline_wildcard_rules = []
 
     # RRsets will go here
     rrsets = {}
@@ -130,9 +129,8 @@ class Parser(VarietyClass, PSLReader):
     def _prioritize_wildcard_exception_rules(self):
         # Make sure exceptions always have priority (more specific rules don't win).
         # 
-        # This is done by removing [???].<exception> entries. The case [???].*.<parent(exception)>
-        # is covered by inline wildcard treatment above.
-        # Then, point all subnames of a whilecard exception to the exception itself
+        # This is done by removing [???].<exception> entries. Then, point all subnames of a
+        # wildcard exception to the exception itself.
         for rule in self.wildcard_exception_rules:
             self.rrsets = {subname: rrset
                            for subname, rrset in self.rrsets.items()
@@ -152,9 +150,6 @@ class Parser(VarietyClass, PSLReader):
         # Find the next wildcard in the hierarchy and point to the rule covering its parent.
         self._process_wildcard_exception_rules()
 
-        # The procedure may overwrite other wildcard rules, so it is run after them.
-        self._process_inline_wildcard_rules()
-
         # Remove rules that do not apply any longer
         self._prioritize_wildcard_exception_rules()
 
@@ -168,33 +163,6 @@ class Parser(VarietyClass, PSLReader):
         timestamp = int(time.time())
         hexdigest = self.get_checksum()
         self._update_rrsets('', [('TXT', ['"{} {}"'.format(timestamp, hexdigest)])])
-
-    def _process_inline_wildcard_rules(self):
-        # Take care of inline wildcard and cut off the corresponding subtree (not supported)
-        # To expose that the situation is not supported, do not set a PTR record. Instead,
-        # set TXT records explicitly listing the rules that are not supported.
-
-        # Let's collect the rules pertaining to each subtree, and then create the TXT record.
-        inline_wildcard_mapping = defaultdict(list)
-        for rule in self.inline_wildcard_rules:
-            # Collect parents from the right-most wildcard and store the respective rule
-            _, parent = rule.rsplit('*', 1)
-            inline_wildcard_mapping[parent].append(rule)
-
-        # Finalize rules and set TXT record
-        for parent, rules in inline_wildcard_mapping.items():
-            # The necessity to handle <...>.*.<parent> requires either setting up TXT records
-            # with such names (which is not possible in DNS), or handling the situation at the
-            # parent level, cutting off the tree there.
-            # If a rule is present at that name (with only one wildcard at the very left), it
-            # would erroneously also apply to all subnames, so it has to be rendered invalid.
-            wildcard = '*{}'.format(parent)
-            if wildcard in self.rrsets:
-                rules.append(self.rrsets[wildcard][0]['records'][0][:-1])
-            rules = ['"{}"'.format(rule) for rule in rules]
-
-            # Set TXT RRset with applicable rules (replaces PTR)
-            self._update_rrsets(wildcard, [('TXT', rules)])
 
     def _process_regular_rules(self):
         for suffix in self.regular_rules:
@@ -248,10 +216,7 @@ class Parser(VarietyClass, PSLReader):
         if rule is None:
             return
 
-        if rule.find('*', 1) > 0:
-            self.logger.info('Rule not suitable for DNS: {}'.format(rule))
-            self.inline_wildcard_rules.append(rule.encode('idna').decode('ascii'))
-        elif rule[0] == '*':
+        if rule[0] == '*':
             self.proper_wildcard_rules.append(rule.encode('idna').decode('ascii'))
         elif rule[0] == '!':
             self.wildcard_exception_rules.append(rule[1:].encode('idna').decode('ascii'))

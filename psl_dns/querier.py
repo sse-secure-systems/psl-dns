@@ -26,12 +26,7 @@ class PSL(PSLBase):
 
     def _get_public_suffix_raw(self, domain):
         # Retrieve RRset
-        try:
-            answer = self.query(domain, dns.rdatatype.PTR)
-        except dns.resolver.NoAnswer:
-            msg = 'Domain {} is affected by an unsupported rule'.format(domain)
-            raise exceptions.UnsupportedRule(msg)
-
+        answer = self.query(domain, dns.rdatatype.PTR)
         return answer[0].to_text()
 
     def get_public_suffix(self, domain):
@@ -67,13 +62,9 @@ class PSL(PSLBase):
 
     def get_rules(self, domain):
         # The public suffix rule itself is always a rule
-        try:
-            rules = [self._get_public_suffix_raw(domain).rstrip('.')]
-        except exceptions.UnsupportedRule:
-            rules = []
+        rules = [self._get_public_suffix_raw(domain).rstrip('.')]
 
-        # For wildcard exceptions and unsupported inline wildcards, additional rules
-        # are given as TXT records.
+        # For wildcard exceptions, additional rules are given as TXT records.
         try:
             rules.extend([rr.to_text()[1:-1] for rr in self.query(domain, dns.rdatatype.TXT)])
         except dns.resolver.NoAnswer:

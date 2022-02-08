@@ -7,13 +7,6 @@ from psl_dns import Parser
 from psl_dns.providers import DefaultProvider
 from psl_dns.utils import CustomFormatter
 
-EXTRA_RULES = [
-    '*.wildcard.test',
-    'inline.*.wildcard.test',
-    '*.inline.*.wildcard.test',
-    '!except.inline.*.wildcard.test',
-]
-
 
 def main():
     description = '''
@@ -42,9 +35,6 @@ def main():
 
     with codecs.open(args.psl_file, 'r', 'utf8') as stream:
         parser.process(stream)
-
-    for rule in EXTRA_RULES:
-        parser.process_line(rule, update_hash=False)
 
     rrsets = parser.get_rrsets()
     print(json.dumps(rrsets))

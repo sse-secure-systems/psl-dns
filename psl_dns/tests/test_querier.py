@@ -77,11 +77,6 @@ class TestGetPublicSuffix(TestBase):
         self.assertGetPublicSuffix('www.公司.cn.', '公司.cn.')
         self.assertGetPublicSuffix('公司.cn', '公司.cn')
 
-    def test_unsupported_rule_exception(self):
-        with self.get_mock_context_manager(psl_dns.exceptions.UnsupportedRule):
-            with self.assertRaises(psl_dns.exceptions.UnsupportedRule):
-                self.psl.get_public_suffix('unsupported.wildcard.test')
-
     def test_invalid_domain(self):
         with self.assertRaises(ValueError):
             self.psl.get_public_suffix('.')

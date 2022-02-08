@@ -3,7 +3,6 @@ import sys
 import textwrap
 
 from psl_dns import PSL
-from psl_dns.exceptions import UnsupportedRule
 from psl_dns.providers import DefaultProvider
 from psl_dns.utils import CustomFormatter
 
@@ -16,14 +15,10 @@ def main():
         suffix that covers the queried domain. IDNA mode and trailing dots
         (if given) are preserved.
 
-        Public Suffix List (PSL) rules with inline wildcards are not fully
-        supported. If the queried name is governed by such a rule, the word
-        "unknown" is returned.
-
         Optionally, the set of applicable rules and the PSL checksum can be
         displayed.
 
-        Exit codes: 0 (public), 1 (private), or 2 (unknown).
+        Exit codes: 0 (public) or 1 (private).
         '''
     parser = argparse.ArgumentParser(description=textwrap.dedent(description), formatter_class=CustomFormatter)
     parser.add_argument('domain', help='Domain to query', type=str)
@@ -38,15 +33,10 @@ def main():
     psl = PSL(zone=args.zone, resolver=args.resolver, timeout=args.timeout, log_level=args.verbose)
 
     domain = args.domain
-    try:
-        public_suffix = psl.get_public_suffix(domain)
-    except UnsupportedRule:
-        print('unknown')
-        status = 2
-    else:
-        is_public_suffix = psl.is_public_suffix(domain, public_suffix)
-        print('{} {}'.format('public' if is_public_suffix else 'private', public_suffix))
-        status = int(not is_public_suffix)
+    public_suffix = psl.get_public_suffix(domain)
+    is_public_suffix = psl.is_public_suffix(domain, public_suffix)
+    print('{} {}'.format('public' if is_public_suffix else 'private', public_suffix))
+    status = int(not is_public_suffix)
 
     if args.l:
         for rule in psl.get_rules(domain):

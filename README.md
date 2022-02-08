@@ -126,51 +126,6 @@ dot, consistent with the encoding in the Public Suffix List itself:
 {'公司.cn'}
 ```
 
-#### Rules with inline wildcards
-Unfortunately, rules with inline wildcard labels `*` (i.e. wildcards
-that are not at the leftmost position) cannot be represented using DNS
-lookups. Luckily, the PSL does not contain any such rules as of the
-time of this writing (but this may change).
-
-To demonstrate what would happen in such a case, a few test rules have
-been added to the PSL zone under the `*.wildcard.test` domain. (As
-these rules are made up, they are not included in the PSL checksum
-calculation.)
-
-When querying the public suffix (status) for a domain that falls into
-the realm of a wildcard label which acts as an inline label in at
-least one PSL rule, an `UnsupportedRule` exception is thrown:
-
-```python
-# Query public suffix status
->>> psl.is_public_suffix('unsupported.wildcard.test')
-Traceback (most recent call last):
-  File "<stdin>", line 1, in <module>
-  ...
-    raise UnsupportedRule
-psl.exceptions.UnsupportedRule: Domain unsupported.wildcard.test is affected by an unsupported rule
-
-# Get the public suffix
->>> psl.get_public_suffix('unsupported.wildcard.test')
-Traceback (most recent call last):
-  File "<stdin>", line 1, in <module>
-  ...
-    raise UnsupportedRule
-psl.exceptions.UnsupportedRule: Domain unsupported.wildcard.test is affected by an unsupported rule
-```
-
-However, you can retrieve the relevant rules for manual consumption:
-
-```python
-# Get the applicable rules
->>> psl.get_rules('unsupported.wildcard.test')
-{'*.wildcard.test', '!except.inline.*.wildcard.test', 'inline.*.wildcard.test', '*.inline.*.wildcard.test'}
-```
-
-This behavior applies to the entire DNS subtree that is defined by the
-first (right-most) wildcard label in the rule.
-
-
 ### Command line
 
 #### psl-dns_query
@@ -189,14 +144,10 @@ Returns the the word "public" or "private", followed by the public
 suffix that covers the queried domain. IDNA mode and trailing dots
 (if given) are preserved.
 
-Public Suffix List (PSL) rules with inline wildcards are not fully
-supported. If the queried name is governed by such a rule, the word
-"unknown" is returned.
-
 Optionally, the set of applicable rules and the PSL checksum can be
 displayed.
 
-Exit codes: 0 (public), 1 (private), or 2 (unknown).
+Exit codes: 0 (public) or 1 (private).
 
 positional arguments:
   domain               Domain to query
