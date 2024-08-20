@@ -13,7 +13,7 @@ setuptools.setup(
     long_description_content_type="text/markdown",
     url="https://github.com/sse-secure-systems/psl-dns",
     packages=setuptools.find_packages(),
-    install_requires=['dnspython>=1.14.0'],
+    install_requires=['dnspython>=1.14.0', 'requests>=2.22.0'],
     classifiers=[
         "Development Status :: 5 - Production/Stable",
         "Intended Audience :: Developers",
