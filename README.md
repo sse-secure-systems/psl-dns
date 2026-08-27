@@ -12,8 +12,7 @@ matching is performed at lookup time. To make this possible, the PSL
 rules have been encoded in the DNS itself (currently under the
 DNSSEC-enabled zone `query.publicsuffix.zone`). This facilitates easy
 querying without the need to keep the PSL at hand. The PSL zone is
-maintained by [SSE](https://securesystems.de/) and usually updated once
-a day.
+maintained by [deSEC](https://desec.io/) and usually updated once a day.
 
 The `Parser` class (along with the `psl-dns_parse` command) is used to
 iterate over a [PSL file](https://publicsuffix.org/list/public_suffix_list.dat)

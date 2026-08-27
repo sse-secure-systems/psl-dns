@@ -7,11 +7,11 @@ setuptools.setup(
     name="psl-dns",
     version="1.1.1",
     author="Peter Thomassen",
-    author_email="peter.thomassen@securesystems.de",
+    author_email="peter@desec.io",
     description="Query the Public Suffix List (PSL) via DNS and check the PSL status of a domain.",
     long_description=long_description,
     long_description_content_type="text/markdown",
-    url="https://github.com/sse-secure-systems/psl-dns",
+    url="https://github.com/desec-io/psl-dns",
     packages=setuptools.find_packages(),
     install_requires=['dnspython>=1.14.0', 'requests>=2.22.0'],
     classifiers=[
